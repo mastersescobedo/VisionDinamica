@@ -110,7 +110,7 @@ if __name__ == "__main__":
                         v0 = int(v)
 
                         # Dibujo en la imagen de salida de los vectores de velocidad obtenidos
-                        cv2.arrowedLine(imagen_out, (jj, ii), (int(jj + u0), int((ii + v0))), (255, 255, 255))
+                        cv2.arrowedLine(imagen_out, (jj, ii), (int(jj + u0), int((ii + v0))), (255, 0, 0))
 
                 # Mostrar y guardar la imagen de salida para su posterior análisis
                 cv2.imshow('1',imagen_out)
