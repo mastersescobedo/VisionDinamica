@@ -14,8 +14,9 @@ if __name__ == "__main__":
     inicio = time()
 
     # Tamaño del kernel y valor para los movimientos de bucle
-    kernel = 9
-    k = math.floor(kernel / 2)
+#     kernel = 9
+#     k = math.floor(kernel / 2)
+    k = 5
 
     # Inicialización de A, B y uv
     A = np.zeros((2, 2))
