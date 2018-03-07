@@ -4,19 +4,14 @@ import numpy.linalg as nl
 import math
 from time import time
 
-
 if __name__ == "__main__":
 
     f_path = 'escaleras.avi'
     cap = cv2.VideoCapture(f_path)
 
-    # Inicio del calculo del tiempo
-    inicio = time()
-
     # Tamaño del kernel y valor para los movimientos de bucle
-#     kernel = 9
-#     k = math.floor(kernel / 2)
-    k = 5
+    kernel = 5
+    k = math.floor(kernel / 2)
 
     # Inicialización de A, B y uv
     A = np.zeros((2, 2))
@@ -25,26 +20,24 @@ if __name__ == "__main__":
 
     start = True
 
-    #small = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
+    # small = cv2.resize(image, (0, 0), fx=0.5, fy=0.5)
 
     while cap.isOpened():
         ret, frame = cap.read()
         if ret == True:
 
             if start:
-                #imagen_anterior = cv2.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)/255,(0,0), fx=0.5, fy=0.5)
-                imagen_anterior = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)/255
+                # imagen_anterior = cv2.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)/255,(0,0), fx=0.5, fy=0.5)
+                imagen_anterior = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) / 255
 
-                start=False
+                start = False
             else:
 
-                #imagen_actual = cv2.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)/255,(0,0), fx=0.5, fy=0.5)
-                imagen_actual = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)/255
+                # Inicio del calculo del tiempo
+                inicio = time()
 
-                # # Se leen las imágenes y se extraen los tamaños
-                # imagen1 = cv2.imread(imagenes[x]) * 1 / 255
-                # h, w, c = imagen1.shape
-                # imagen2 = cv2.imread(imagenes[x + 1]) * 1 / 255
+                # imagen_actual = cv2.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)/255,(0,0), fx=0.5, fy=0.5)
+                imagen_actual = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) / 255
 
                 h, w = imagen_anterior.shape
 
@@ -76,15 +69,15 @@ if __name__ == "__main__":
                 Iyt_2 = np.multiply(dery, dert)
 
                 # Variables de tamaño para controlar los bucles
-                hk = int(np.ceil(h / (kernel) - 1))
-                wk = int(np.ceil(w / (kernel) - 1))
+                hk = h  # int(np.ceil(h / (kernel) - 1))
+                wk = w  # int(np.ceil(w / (kernel) - 1))
 
                 # Se recorre la imagen para empezar a hacer los cálculos de la fórmula 1
                 for i in range(hk):
                     for j in range(wk):
                         # Variables para creación de los kernels que recorreran la imagen
-                        ii = i * kernel + k
-                        jj = j * kernel + k
+                        ii = i  # * kernel + k
+                        jj = j  # * kernel + k
 
                         # Sumatorios de la fórmula 1
                         Ix2 = np.sum(Ix2_2[ii - k:ii + k, jj - k:jj + k])
@@ -110,31 +103,32 @@ if __name__ == "__main__":
                         u = uv[0]
                         v = uv[1]
 
-                        if v>255:
-                            v=255
-                        if u>255:
-                            u=255
+                        if v > 255:
+                            v = 255
+                        if u > 255:
+                            u = 255
 
-                        if v<-255:
-                            v=-255
-                        if u<-255:
-                            u=-255
+                        if v < -255:
+                            v = -255
+                        if u < -255:
+                            u = -255
 
-                        # Dibujo en la imagen de salida de los vectores de velocidad obtenidos
-                        cv2.arrowedLine(imagen_out, (jj, ii), (jj + u, ii + v), (255, 255, 0))
+                        if ii % kernel == 0 and jj % kernel == 0:
+                            # Dibujo en la imagen de salida de los vectores de velocidad obtenidos
+                            cv2.arrowedLine(imagen_out, (jj, ii), (jj + int(u), ii + int(v)), (255, 255, 255))
 
                 # Mostrar y guardar la imagen de salida para su posterior análisis
-                cv2.imshow('1',imagen_out)
+                cv2.imshow('1', imagen_out)
                 cv2.waitKey(1)
                 # imagen = imagenes[x].replace('.jpg', '')
                 # print(imagen)
                 # cv2.imwrite(imagen + '_pro' + '.jpg', imagen_out)
 
-                imagen_anterior=imagen_actual
+                imagen_anterior = imagen_actual
 
-            # Cálculo del tiempo del script y mostrarlo por pantalla
-            tiempototal = time() - inicio
-            print('LK1 ha tardado = ' + str(tiempototal))
+                # Cálculo del tiempo del script y mostrarlo por pantalla
+                tiempototal = time() - inicio
+                print('LK1 ha tardado = ' + str(tiempototal))
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
