@@ -4,6 +4,17 @@ import numpy.linalg as nl
 import math
 from time import time
 
+'''
+Iteracion para buscar la convergencia, dependientdo del numero de iteraciones será de mayor o menor tiempo de computo
+
+ecuacion diapo 31
+
+Se realiza el bucle sobre la imagen 
+
+donde se suman los valores por el kernel
+
+Se decien pintar cierto pixeles
+'''
 if __name__ == "__main__":
 
     f_path = 'cama.avi'
@@ -67,6 +78,7 @@ if __name__ == "__main__":
                 # Creación de las variables umean y vmean
                 umean = np.zeros((h, w))
                 vmean = np.zeros((h, w))
+
 
                 # Bucle que se encargue de realizar las iteraciones que se programen
                 for iter in range(itera):
