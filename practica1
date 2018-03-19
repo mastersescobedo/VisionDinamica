@@ -1,0 +1,72 @@
+Vision dinamica practica 1
+
+PAra la realización de esta practica se ha considerado usar como entrada un video
+
+
+
+Lucas Kanade 
+
+
+
+en primer lugar se inicializan als variables y se carga el video
+
+En la primera iteración se toma el primer frame como la imagen anterior para el calculo
+
+En primer lugar se realiza un filtrado gausiano de las imagenes anterior y actual. Una vez filtradas las imagenes se realiza el calculo de las derivadas parcciales tatno en X como en Y sobre ambas imagenes usando Sobel y a continuación se realiza la media media entre la actual y la anterior
+
+Una vez calculada la derivada espacial, se calcula la media temporal restando las imagenes actual y anterior filtradas.
+
+Se calculan las derivadas espaciales en ambos sentidos y con respecto al tiempo
+
+A continuación, en bucle sobre toda la imagen se realizan los siguientes procesos:
+
+	El calulo de los sumatorios.
+
+	Método 1
+
+		Creación de la matriz de gradientes espaciales y de la matriz de la contribución temporal (vector de desajuste temporal) a partir de los sumatorios
+
+		Tras operar las matrices se obtienen U y V 
+
+	Método 2 
+
+		Para la obtencion de la solución se han desarollado las matrices del método 1 y s procede a calcular cada uno de los factores de la solución.
+
+		Se realizaon las operaciones de sumas y divisiones y se obtienen U y V 
+
+
+	Dado el rango de las imagenes, se limitan los valores máximos y minimos de estas a los rangos admisibles para la imagen
+
+	Cada cierto numero de pixeles se pinta un flecha representando U y V
+
+Tras iterar sobre toda la imagen, se muestra por pantalla, se actualizan valores y se calcula el tiempo de cómputo
+
+
+Parámetros:
+	tamaño del kernel: El tamaño del kernel afecta a la capacidad de medir la velocidad, a ventanas muy grandes los movimientos a poca velocidad son casi indetectables y su tiempo de calculo es muy elevado. Con ventanas pequeñas el tiempo de computo se reduce pero los movimientos pequeños pueden resultar demasiado significativos.
+
+		
+
+
+Horn Shunk
+
+
+en primer lugar se inicializan als variables y se carga el video
+
+En la primera iteración se toma el primer frame como la imagen anterior para el calculo
+
+En primer lugar se realiza un filtrado gausiano de las imagenes anterior y actual. Una vez filtradas las imagenes se realiza el calculo de las derivadas parcciales tatno en X como en Y sobre ambas imagenes usando Sobel y a continuación se realiza la media media entre la actual y la anterior
+
+Una vez calculada la derivada espacial, se calcula la media temporal restando las imagenes actual y anterior filtradas. Del mismo modo se inicializan las variables U y V media
+
+
+#### En un documeto particion windows
+
+PArámetros:
+	tamaño del kernel: El tamaño del kernel afecta a la capacidad de medir la velocidad, a ventanas muy grandes los movimientos a poca velocidad son casi indetectables y su tiempo de calculo es muy elevado. Con ventanas pequeñas el tiempo de computo se reduce pero los movimientos pequeños pueden resultar demasiado significativos.
+	
+	lambda: parámetro que actúa como ponderación de los errores de suavidad y de la ecuacion de restricción e flujo optico. (((Inserar ecuaciones de los errores))) SI al imagen posee mucho ruido, el facot principal del error el proceso proviene de la calidad de la imagen es por ello que lamba tiene que ser pequeño ya que hay qu e minimizar el rror de ruido. SI por el contrario al iamgen es de buena calidad el error provendrá de la ecuacion de restriccion de flujo optipo por lo que para que este error tenga un peso mayor en la minimización, lamba debe de ser grande. 
+
+
+
+
