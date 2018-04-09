@@ -9,7 +9,7 @@ from time import time
 
 if __name__ == "__main__":
 
-    f_path = 'cama.avi'
+    f_path = 'escaleras.avi'
     cap = cv2.VideoCapture(f_path)
 
     # Inicio del calculo del tiempo
@@ -33,8 +33,8 @@ if __name__ == "__main__":
         if ret:
 
             if start:
-                imagen_anterior = cv2.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) / 255, (0, 0), fx=0.5, fy=0.5)
-                # imagen_anterior = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) / 255
+                #imagen_anterior = cv2.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) / 255, (0, 0), fx=0.5, fy=0.5)
+                imagen_anterior = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) / 255
 
                 start = False
 
@@ -42,8 +42,8 @@ if __name__ == "__main__":
 
                 inicio = time()
 
-                imagen_actual = cv2.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) / 255, (0, 0), fx=0.5, fy=0.5)
-                # imagen_actual = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) / 255
+                #imagen_actual = cv2.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) / 255, (0, 0), fx=0.5, fy=0.5)
+                imagen_actual = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) / 255
 
                 h, w = imagen_anterior.shape
 

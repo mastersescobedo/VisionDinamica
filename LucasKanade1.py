@@ -29,6 +29,7 @@ if __name__ == "__main__":
             if start:
                 # imagen_anterior = cv2.resize(cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)/255,(0,0), fx=0.5, fy=0.5)
                 imagen_anterior = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) / 255
+                print(frame.shape)
 
                 start = False
             else:
