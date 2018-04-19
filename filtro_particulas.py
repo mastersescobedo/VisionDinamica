@@ -83,24 +83,42 @@ if __name__ == "__main__":
                 print(estados[1, :])
                 print("______******______")
 
+                # for new_states in range(valores_aleatorios.shape[0]):
+                #
+                #     estados[0, new_states] = estados[0, int(valores_aleatorios[new_states])]
+                #     estados[1, new_states] = estados[1, int(valores_aleatorios[new_states])]
+
+                # for new_states in range(valores_aleatorios.shape[0]):
+                #
+                #     state_value_0 = estados[0,int(valores_aleatorios[new_states])]
+                #
+                #     if state_value_0<1:
+                #         estados[0, new_states] = math.fabs(np.random.normal(1, 0.5)*1)
+                #     else:
+                #         estados[0, new_states] = math.fabs(
+                #             np.random.normal(1, 1) * estados[0, int(valores_aleatorios[new_states])])
+                #
+                #     state_value_1 = estados[1, int(valores_aleatorios[new_states])]
+                #
+                #     if state_value_1 <1:
+                #         estados[1, new_states] = math.fabs(np.random.normal(1, 0.5) * 1)
+                #     else:
+                #         estados[1, new_states] = math.fabs(
+                #             np.random.normal(1, 1) * estados[1, int(valores_aleatorios[new_states])])
 
                 for new_states in range(valores_aleatorios.shape[0]):
 
                     state_value_0 = estados[0,int(valores_aleatorios[new_states])]
 
-                    if state_value_0<1:
-                        estados[0, new_states] = math.fabs(np.random.normal(1, 0.5)*1)
-                    else:
+                    if state_value_0>0:
                         estados[0, new_states] = math.fabs(
-                            np.random.normal(1, 1) * estados[0, int(valores_aleatorios[new_states])])
+                            np.random.normal(0, 15) + estados[0, int(valores_aleatorios[new_states])])
 
                     state_value_1 = estados[1, int(valores_aleatorios[new_states])]
 
-                    if state_value_1 <1:
-                        estados[1, new_states] = math.fabs(np.random.normal(1, 0.5) * 1)
-                    else:
+                    if state_value_1 >0:
                         estados[1, new_states] = math.fabs(
-                            np.random.normal(1, 1) * estados[1, int(valores_aleatorios[new_states])])
+                            np.random.normal(0, 15) + estados[1, int(valores_aleatorios[new_states])])
 
 
 
@@ -128,18 +146,18 @@ if __name__ == "__main__":
 
             for itera in range(num_semillas):
 
-                end_point_a = int(estados[0, itera])+100
+                end_point_a = int(estados[1, itera])+100
                 if end_point_a>image_size[0]:
                     end_point_a=image_size[0]
 
-                end_point_b = int(estados[1, itera])+100
+                end_point_b = int(estados[0, itera])+100
                 if end_point_b>image_size[1]:
                     end_point_b=image_size[1]
 
-                frame = cv2.rectangle(frame, (int(estados[0, itera]), int(estados[1, itera])), (end_point_a, end_point_b), (0, 255, 0), 3)
+                out = cv2.rectangle(frame, (int(estados[1, itera]), int(estados[0, itera])), (end_point_a, end_point_b), (0, 255, 0), 3)
 
-            cv2.imshow('1', frame)
-            cv2.waitKey(80)
+            cv2.imshow('1', out)
+            cv2.waitKey(100)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
