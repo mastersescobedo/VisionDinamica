@@ -3,30 +3,32 @@ import cv2
 import random
 import math
 
+
 def createMask(low, high, image):
     lower_color = np.array(low, dtype='uint8')
     upper_color = np.array(high, dtype='uint8')
     return cv2.inRange(image, lower_color, upper_color)
 
+
 def inicializacion(num_semillas, item_size):
+    # Se crean tantos estados como semillas
+    estados = np.zeros((2, num_semillas))
 
-    #Se crean tantos estados como semillas
-    estados =np.zeros((2,num_semillas))
+    # Cada estado se compone de dos componentes, el vertice superior izquierdo a partir del cual se crearán los rectanculos de deteccón
+    estados[0, :] = np.random.random_integers(0, image_size[1] - item_size, size=num_semillas)
+    estados[1, :] = np.random.random_integers(0, image_size[0] - item_size, size=num_semillas)
 
-    #Cada estado se compone de dos componentes, el vertice superior izquierdo a partir del cual se crearán los rectanculos de deteccón
-    estados[0, :] = np.random.random_integers(0, image_size[0] - item_size, size=num_semillas)
-    estados[1, :] = np.random.random_integers(0, image_size[1] - item_size, size=num_semillas)
-
-    #Se definen tantos pesos como semillas
+    # Se definen tantos pesos como semillas
     pesos = np.zeros(num_semillas)
 
     return estados, pesos
 
+
 def evaluacion(frame, lower_color, upper_color, num_semillas, item_size):
-    #Se convierte el frame a HSV
+    # Se convierte el frame a HSV
     image_hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
-    #Se aplia una máscara con el color a detectar
+    # Se aplia una máscara con el color a detectar
     mask = createMask(lower_color, upper_color, image_hsv)
     rectangle = [None] * num_semillas
 
@@ -37,27 +39,29 @@ def evaluacion(frame, lower_color, upper_color, num_semillas, item_size):
 
         pesos[i] = np.count_nonzero(rectangle)
 
-    #Se realiza la suma de los pesos
+    # Se realiza la suma de los pesos
     suma = pesos.sum(0)
 
     return suma, pesos
 
-def estimacion(frame, pesos, estados):
 
+def estimacion(frame, pesos, estados, item_size):
     index = np.argmax(pesos)
 
-    end_point_a = int(estados[1, index]) + 100
+    end_point_a = int(estados[1, index]) + item_size
     if end_point_a > image_size[0]:
         end_point_a = image_size[0]
 
-    end_point_b = int(estados[0, index]) + 100
+    end_point_b = int(estados[0, index]) + item_size
     if end_point_b > image_size[1]:
         end_point_b = image_size[1]
 
-    out = cv2.rectangle(frame, (int(estados[1, index]), int(estados[0, index])), (end_point_a, end_point_b),(0, 255, 0), 3)
+    out = cv2.rectangle(frame, (int(estados[1, index]), int(estados[0, index])), (end_point_a, end_point_b),
+                        (0, 255, 0), 3)
     return out
 
-def seleccion (pesos, num_semillas):
+
+def seleccion(pesos, num_semillas):
     # Normalización de los pesos
     pesos = pesos / pesos.sum(0)
 
@@ -79,7 +83,8 @@ def seleccion (pesos, num_semillas):
 
     return valores_aleatorios
 
-def difusion_original (estados, valores_aleatorios):
+
+def difusion_original(estados, valores_aleatorios):
     for new_states in range(valores_aleatorios.shape[0]):
 
         state_value_0 = estados[0, int(valores_aleatorios[new_states])]
@@ -99,12 +104,12 @@ def difusion_original (estados, valores_aleatorios):
 
 def difusion(estados, valores_aleatorios):
     for new_states in range(valores_aleatorios.shape[0]):
-
-        #Se perturban las componentes del punto que sirven de origen para el recuadro
+        # Se perturban las componentes del punto que sirven de origen para el recuadro
         estados[0, new_states] = math.fabs(np.random.normal(0, 15) + estados[0, int(valores_aleatorios[new_states])])
         estados[1, new_states] = math.fabs(np.random.normal(0, 15) + estados[1, int(valores_aleatorios[new_states])])
 
     return estados
+
 
 if __name__ == "__main__":
 
@@ -113,46 +118,40 @@ if __name__ == "__main__":
 
     num_semillas = 100
 
-    item_size = 100
-    image_size=(638,360)
+    item_size = 150
+    image_size = (638, 360)
 
-    lower_color=[0,140,40]
-    upper_color=[10,255,160]
+    lower_color = [0, 140, 40]
+    upper_color = [10, 255, 160]
 
     no_visible = 0
 
-    #Definición del los estados aleatorios
-    estados, pesos =inicializacion(num_semillas, item_size)
+    # Definición del los estados aleatorios
+    estados, pesos = inicializacion(num_semillas, item_size)
 
     while cap.isOpened():
         ret, frame = cap.read()
         if ret:
 
-            if no_visible>=20:
+            if no_visible >= 10:
                 estados, pesos = inicializacion(num_semillas, item_size)
 
             # Evaluación de los estados
             suma, pesos = evaluacion(frame, lower_color, upper_color, num_semillas, item_size)
 
-            no_visible+=1
+            no_visible += 1
 
             out = np.copy(frame)
 
-            #Si se ha detectado el objeto en algun estado
-            if suma!=0:
+            # Si se ha detectado el objeto en algun estado
+            if suma != 0:
+                out = estimacion(frame, pesos, estados, item_size)
 
-
-                out = estimacion(frame, pesos, estados)
-
-                valores_aleatorios = seleccion (pesos, num_semillas)
+                valores_aleatorios = seleccion(pesos, num_semillas)
 
                 estados = difusion(estados, valores_aleatorios)
 
                 visible = 0
-
-
-
-
 
             # for itera in range(num_semillas):
             #
@@ -167,7 +166,7 @@ if __name__ == "__main__":
             #     out = cv2.rectangle(frame, (int(estados[1, itera]), int(estados[0, itera])), (end_point_a, end_point_b), (0, 255, 0), 3)
 
             cv2.imshow('1', out)
-            cv2.waitKey(100)
+            cv2.waitKey(22)
 
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
